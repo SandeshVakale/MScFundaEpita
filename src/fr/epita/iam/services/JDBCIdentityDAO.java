@@ -17,7 +17,7 @@ import fr.epita.iam.problem.*;
 
 
 /**
- * @author tbrou
+ * @author Sandesh Vakale
  *
  */
 public class JDBCIdentityDAO {
@@ -31,40 +31,49 @@ public class JDBCIdentityDAO {
 	 * 
 	 */
 	public JDBCIdentityDAO() throws SQLException {
+		
+		try{
 		this.connection = DriverManager.getConnection("jdbc:mysql://66.147.244.85:3306/checkmyg_Epita?"+"user=checkmyg_Sandesh&password=SandeshV");
-		//System.out.println(connection.getSchema());
+		
 		System.out.println("This is online database");
+		}catch(SQLException e)
+		{
+			System.out.println("May be you are not connected to internet, Please connect to internet and try again");
+			System.exit(1);
+		}
 	}
 	
 	
 	public void writeIdentity(Identity identity) throws SQLException {
 		String insertStatement = "insert into IDENTITIES (IDENTITIES_DISPLAYNAME, IDENTITIES_EMAIL, IDENTITIES_BIRTHDATE) "
 				+ "values(?, ?, ?)";
-		PreparedStatement pstmt_insert = connection.prepareStatement(insertStatement);
-		pstmt_insert.setString(1, identity.getDisplayName());
-		pstmt_insert.setString(2, identity.getEmail());
+		PreparedStatement pstmtinsert = connection.prepareStatement(insertStatement);
+		pstmtinsert.setString(1, identity.getDisplayName());
+		pstmtinsert.setString(2, identity.getEmail());
 		Date now = new Date();
-		pstmt_insert.setDate(3, new java.sql.Date(now.getTime()));
+		pstmtinsert.setDate(3, new java.sql.Date(now.getTime()));
 
-		pstmt_insert.execute();
+		pstmtinsert.execute();
 		
 		System.out.println("you succesfully created this identity :" +identity.getDisplayName()+" "+identity.getEmail()+"\n");
+		pstmtinsert.close();
 
 	}
 
 	public List<Identity> readAll() throws SQLException {
 		List<Identity> identities = new ArrayList<Identity>();
 
-		PreparedStatement pstmt_select = connection.prepareStatement("select * from IDENTITIES");
-		ResultSet rs = pstmt_select.executeQuery();
+		PreparedStatement pstmtselect = connection.prepareStatement("select * from IDENTITIES");
+		ResultSet rs = pstmtselect.executeQuery();
 		while (rs.next()) {
 			String displayName = rs.getString("IDENTITIES_DISPLAYNAME");
 			String uid = String.valueOf(rs.getString("IDENTITIES_UID"));
 			String email = rs.getString("IDENTITIES_EMAIL");
-			Date birthDate = rs.getDate("IDENTITIES_BIRTHDATE");
 			Identity identity = new Identity(uid, displayName, email);
 			identities.add(identity);
+			
 		}
+		pstmtselect.close();
 		return identities;
 
 	}
@@ -73,10 +82,9 @@ public class JDBCIdentityDAO {
 			
 	int count = 0;
 		
-		PreparedStatement pstmt_select = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
-		ResultSet rs = pstmt_select.executeQuery();
+		PreparedStatement pstmtselect = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
+		ResultSet rs = pstmtselect.executeQuery();
 		System.out.println(rs);
-		String arr = null;
 		while (rs.next()) {
 		    String em = rs.getString("IDENTITIES_UID");
 		    System.out.println("em="+em);
@@ -97,7 +105,7 @@ public class JDBCIdentityDAO {
 			
 			System.out.println("uid not found, Please check list of available uids and try again");
 		}
-			
+		pstmtselect.close();
 		
 
 	}
@@ -107,7 +115,7 @@ public class JDBCIdentityDAO {
 	
 	public void update(Identity identity) throws UpdateException{
 		 {
-		// TODO Auto-generated method stub
+		
 			 
 			
 			 
@@ -122,10 +130,9 @@ public class JDBCIdentityDAO {
 			
 			int count = 0;
 			
-			PreparedStatement pstmt_select = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
-			ResultSet rs = pstmt_select.executeQuery();
-			//System.out.println(rs);
-			String arr = null;
+			PreparedStatement pstmtselect = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
+			ResultSet rs = pstmtselect.executeQuery();
+			
 			while (rs.next()) {
 			    String em = rs.getString("IDENTITIES_UID");
 			   
@@ -136,7 +143,7 @@ public class JDBCIdentityDAO {
 			    }
 			}
 			
-			
+			pstmtselect.close();
 			if(count==1)
 			{
 				System.out.println("uid found ");
@@ -150,12 +157,13 @@ public class JDBCIdentityDAO {
 				System.out.println("Identity updated");
 				System.out.println("New Identity display name = "+identity.getDisplayName());
 				System.out.println("New Identity email address = "+identity.getEmail()+"\n");
-				
+				prepareStatement.close();
 			}else{
 				
 				System.out.println("uid not found, Please check list of available uids and try again");
 				
 			}
+			
 			
 			///////////////////////
 			

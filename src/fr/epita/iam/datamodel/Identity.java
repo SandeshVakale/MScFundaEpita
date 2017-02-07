@@ -4,7 +4,7 @@
 package fr.epita.iam.datamodel;
 
 /**
- * @author tbrou
+ * @author Sandesh Vakale
  *
  */
 public class Identity {

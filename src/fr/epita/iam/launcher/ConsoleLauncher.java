@@ -7,17 +7,20 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-
 import fr.epita.iam.datamodel.Identity;
 import fr.epita.iam.services.JDBCIdentityDAO;
 
 import fr.epita.iam.problem.*;
 
 /**
- * @author tbrou
+ * @author Sandesh Vakale
  *
  */
 public class ConsoleLauncher {
+	
+	private ConsoleLauncher(){
+		//Adding a private constructor to hide the implicit public one.
+	}
 	
 	private static JDBCIdentityDAO dao;
 
@@ -43,8 +46,8 @@ public class ConsoleLauncher {
 			scanner.close();
 			return;
 		}
-		int t=1;
-		while(t==1)
+		int dountill = 1;
+		while(dountill==1)
 		{
 		// menu
 		String answer = menu(scanner);
@@ -53,77 +56,33 @@ public class ConsoleLauncher {
 		case "a":
 			// creation
 			createIdentity(scanner);
-			System.out.println("Do you want to run again Yes/No");
-			
-			String check = scanner.nextLine();
-			if(check.equals("yes") || check.equals("Yes"))
-			{
-				t=1;
-				
-			}else
-			{
-				t=0;
-				System.out.println("thank you for banking with us");
-				
-			}
+			dountill = runAgain(scanner);
 			break;
 		case "b":
-			//verifyNow(scanner);
+		    //update
 			udateIdentity(scanner);
-			System.out.println("Do you want to run again Yes/No");
-			
-			String check1 = scanner.nextLine();
-			if(check1.equals("yes") || check1.equals("Yes"))
-			{
-				t=1;
-				
-			}else
-			{t=0;
-				System.out.println("thank you for banking with us");
-				
-			}
+			dountill = runAgain(scanner);
 			break;
 		case "c":
-			//verifyNow(scanner);
+			//Delete
 			deleteIdentity(scanner);
-	System.out.println("Do you want to run again Yes/No");
-			
-			String check11 = scanner.nextLine();
-			if(check11.equals("yes") || check11.equals("Yes"))
-			{
-				t=1;
-				
-			}else
-			{t=0;
-				System.out.println("thank you for banking with us");
-				
-			}
+			dountill = runAgain(scanner);
 			break;
 		
 		case "d":
+			//List
 			listIdentities();
-			System.out.println("Do you want to run again Yes/No");
-			
-			String check111 = scanner.nextLine();
-			if(check111.equals("yes") || check111.equals("Yes"))
-			{
-				t=1;
-				
-			}else
-			{t=0;
-				System.out.println("thank you for banking with us");
-				
-			}
-break;
+			dountill = runAgain(scanner);
+			break;
 			
 		case "e":
 			System.out.println("thank you for banking with us");
-			t=0;
+			dountill=0;
 			break;
 			
 		default:
 			
-			System.out.println("This option is not recognized ("+ answer + ")");
+			System.out.println("This option is not recognized ("+ answer + ") Please try again");
 			break;
 		}
 		}
@@ -147,6 +106,30 @@ break;
 		
 	}
 
+	
+	private static int runAgain(Scanner scanner){
+		System.out.println("Do you want to run again Yes/No");
+		int t;
+		String check = scanner.nextLine();
+		
+		if("yes".equals(check) || "Yes".equals(check) || "y".equals(check) || "Y".equals(check))
+		{
+			t=1;
+			
+		}else if("No".equals(check) || "no".equals(check) || "N".equals(check) || "n".equals(check))
+		{
+			t=0;
+			System.out.println("thank you for banking with us");
+			
+		}else
+		{   t=0;
+			System.out.println("invalid input. Please write Yes or No");
+			runAgain(scanner);
+		}
+		return t;
+		
+	}
+	
 	/**
 	 * @param scanner
 	 * @throws SQLException 
@@ -183,22 +166,6 @@ break;
 		
 		
 	}
-	private static void verifyNow(Scanner scanner) throws SQLException{
-		System.out.print("Please enter the Identity uid");
-		
-		String uid = scanner.nextLine();
-		
-		Identity Identity = new Identity(uid, null, null);
-		
-		try {
-			dao.verify(Identity);
-		} catch (SQLException e) {
-			System.out.println(e);
-		}
-
-		
-	}
-	
 	private static void udateIdentity(Scanner scanner) throws SQLException{
 		
 		System.out.println("Modification Activity");
@@ -209,15 +176,16 @@ break;
 		System.out.print("Please enter the new Identity email address");
 		String email = scanner.nextLine();
 		
-		Identity Identity = new Identity(uid, displayName, email);
+		Identity iDentity = new Identity(uid, displayName, email);
 		
 		
 
 		
 		try {
-			dao.update(Identity);
+			dao.update(iDentity);
 		} catch (UpdateException e) {
 			System.out.println(e.getUpdateFault());
+
 		}
 
 	
@@ -253,7 +221,7 @@ break;
 	 */
 	private static boolean authenticate(String login, String password) {
 
-		// TODO replace this hardcoded check by the real authentication method
+		//authentication method
 		return "adm".equals(login) && "pwd".equals(password);
 	}
 

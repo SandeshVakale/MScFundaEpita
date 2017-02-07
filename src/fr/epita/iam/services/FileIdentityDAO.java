@@ -13,7 +13,7 @@ import java.util.Scanner;
 import fr.epita.iam.datamodel.Identity;
 
 /**
- * @author tbrou
+ * @author Sandesh Vakale
  *
  */
 public class FileIdentityDAO {
