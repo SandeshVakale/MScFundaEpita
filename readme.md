@@ -1,3 +1,2 @@
-# TODO (12/12/2016)
-Happy new year!
-And during holidays : Please fill the list thanks to the data coming from the user (in the main method)
+Project Done by Sandesh Vakale
+Database "jdbc:mysql://66.147.244.85:3306/checkmyg_Epita"

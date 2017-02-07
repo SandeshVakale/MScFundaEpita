@@ -68,6 +68,7 @@ public class ConsoleLauncher {
 			}
 			break;
 		case "b":
+			//verifyNow(scanner);
 			udateIdentity(scanner);
 			System.out.println("Do you want to run again Yes/No");
 			
@@ -83,6 +84,7 @@ public class ConsoleLauncher {
 			}
 			break;
 		case "c":
+			//verifyNow(scanner);
 			deleteIdentity(scanner);
 	System.out.println("Do you want to run again Yes/No");
 			
@@ -157,7 +159,7 @@ break;
 		String email = scanner.nextLine();
 		Identity newIdentity = new Identity(null, displayName, email);
 		dao.writeIdentity(newIdentity);
-		System.out.println("you succesfully created this identity :" + newIdentity);
+		
 	
 		
 	}
@@ -174,14 +176,28 @@ break;
 		Identity identity = new Identity(uid, null, null);
 		try {
 			dao.delete(identity);
-			System.out.println("Identity deleted\n");
+			
 		} catch (DeleteException e) {
 			System.out.println(e.getDeleteFault());
 		}
 		
 		
 	}
-	
+	private static void verifyNow(Scanner scanner) throws SQLException{
+		System.out.print("Please enter the Identity uid");
+		
+		String uid = scanner.nextLine();
+		
+		Identity Identity = new Identity(uid, null, null);
+		
+		try {
+			dao.verify(Identity);
+		} catch (SQLException e) {
+			System.out.println(e);
+		}
+
+		
+	}
 	
 	private static void udateIdentity(Scanner scanner) throws SQLException{
 		
@@ -195,9 +211,7 @@ break;
 		
 		Identity Identity = new Identity(uid, displayName, email);
 		
-		System.out.println("Identity updated");
-		System.out.println("New Identity display name = "+displayName);
-		System.out.println("New Identity email address = "+email+"\n");
+		
 
 		
 		try {
