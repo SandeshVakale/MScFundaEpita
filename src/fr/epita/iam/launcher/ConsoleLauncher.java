@@ -13,7 +13,7 @@ import org.apache.logging.log4j.*;
 import fr.epita.iam.authentication.*;
 import fr.epita.iam.datamodel.Identity;
 import fr.epita.iam.services.JDBCIdentityisConnect;
-import fr.tjo.iamcoretj.service.authentication.AuthenticationService;
+
 import fr.epita.iam.problem.*;
 
 
