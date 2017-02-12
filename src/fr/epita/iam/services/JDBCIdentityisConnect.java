@@ -25,6 +25,16 @@ import fr.epita.iam.problem.*;
  */
 public class JDBCIdentityisConnect {
 
+	
+	private static final String IDENTITIES_UID = "IDENTITIES_UID";
+	private static final String IDENTITIES_DISPLAYNAME = "IDENTITIES_DISPLAYNAME";
+	private static final String IDENTITIES_EMAIL = "IDENTITIES_EMAIL";
+	private static final String QUERY_CREATE = "insert into IDENTITIES (IDENTITIES_DISPLAYNAME, IDENTITIES_EMAIL, IDENTITIES_BIRTHDATE) "+ "values(?, ?, ?)";
+	private static final String QUERY_ALL = "select * from IDENTITIES";
+	private static final String QUERY_ALL_UID = "(select IDENTITIES_UID from IDENTITIES)";
+	private static final String QUERY_DELETE_UID = "delete from IDENTITIES where IDENTITIES_UID=?";
+	private static final String CONNECTION_STRING = "jdbc:mysql://66.147.244.85:3306/checkmyg_Epita?";
+	private static final String QUERY_UPDATE_UID = "update IDENTITIES set IDENTITIES_EMAIL=?,IDENTITIES_DISPLAYNAME=? where IDENTITIES_UID=?";
 	//instance of logger to show 
 	private static final Logger logger =  LogManager.getLogger(ConsoleLauncher.class);
 	private Connection connection;
@@ -38,7 +48,7 @@ public class JDBCIdentityisConnect {
 		//connect to database
 		
 		try{
-		this.connection = DriverManager.getConnection("jdbc:mysql://66.147.244.85:3306/checkmyg_Epita?"+"user=checkmyg_Sandesh&password=SandeshV");
+		this.connection = DriverManager.getConnection(CONNECTION_STRING+"user=checkmyg_Sandesh&password=SandeshV");
 		
 		logger.trace("This is online database");
 		}catch(SQLException e)
@@ -53,8 +63,7 @@ public class JDBCIdentityisConnect {
 		
 		//write in identity table with query
 		
-		String insertStatement = "insert into IDENTITIES (IDENTITIES_DISPLAYNAME, IDENTITIES_EMAIL, IDENTITIES_BIRTHDATE) "
-				+ "values(?, ?, ?)";
+		String insertStatement = QUERY_CREATE;
 		PreparedStatement pstmtinsert = connection.prepareStatement(insertStatement);
 		pstmtinsert.setString(1, identity.getDisplayName());
 		pstmtinsert.setString(2, identity.getEmail());
@@ -73,12 +82,12 @@ public class JDBCIdentityisConnect {
 		//list of identities
 		List<Identity> identities = new ArrayList<Identity>();
 
-		PreparedStatement pstmtselect = connection.prepareStatement("select * from IDENTITIES");
+		PreparedStatement pstmtselect = connection.prepareStatement(QUERY_ALL);
 		ResultSet rs = pstmtselect.executeQuery();
 		while (rs.next()) {
-			String displayName = rs.getString("IDENTITIES_DISPLAYNAME");
-			String uid = String.valueOf(rs.getString("IDENTITIES_UID"));
-			String email = rs.getString("IDENTITIES_EMAIL");
+			String displayName = rs.getString(IDENTITIES_DISPLAYNAME);
+			String uid = String.valueOf(rs.getString(IDENTITIES_UID));
+			String email = rs.getString(IDENTITIES_EMAIL);
 			Identity identity = new Identity(uid, displayName, email);
 			identities.add(identity);
 			
@@ -93,11 +102,11 @@ public class JDBCIdentityisConnect {
 		
 	int count = 0;
 		
-		PreparedStatement pstmtselect = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
+		PreparedStatement pstmtselect = connection.prepareStatement(QUERY_ALL_UID);
 		ResultSet rs = pstmtselect.executeQuery();
 		logger.trace(rs);
 		while (rs.next()) {
-		    String em = rs.getString("IDENTITIES_UID");
+		    String em = rs.getString(IDENTITIES_UID);
 		    logger.trace("em="+em);
 		    if(em.equals(identity.getUid()))
 		    {
@@ -133,11 +142,11 @@ public class JDBCIdentityisConnect {
 						
 			int count = 0;
 			
-			PreparedStatement pstmtselect = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
+			PreparedStatement pstmtselect = connection.prepareStatement(QUERY_ALL_UID);
 			ResultSet rs = pstmtselect.executeQuery();
 			
 			while (rs.next()) {
-			    String em = rs.getString("IDENTITIES_UID");
+			    String em = rs.getString(IDENTITIES_UID);
 			   
 			    if(em.equals(identity.getUid()))
 			    {
@@ -151,7 +160,7 @@ public class JDBCIdentityisConnect {
 			{
 				logger.trace("uid found ");
 
-				PreparedStatement prepareStatement = connection.prepareStatement("update IDENTITIES set IDENTITIES_EMAIL=?,IDENTITIES_DISPLAYNAME=? where IDENTITIES_UID=?");
+				PreparedStatement prepareStatement = connection.prepareStatement(QUERY_UPDATE_UID);
 				prepareStatement.setString(1, identity.getEmail() );
 				prepareStatement.setString(2, identity.getDisplayName() );
 				prepareStatement.setString(3, identity.getUid());
@@ -190,13 +199,13 @@ public class JDBCIdentityisConnect {
 			
 			 int count = 0;
 				
-				PreparedStatement prepareStatement = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
+				PreparedStatement prepareStatement = connection.prepareStatement(QUERY_ALL_UID);
 				ResultSet rs = prepareStatement.executeQuery();
-				prepareStatement.close();
+				
 				
 				
 				while (rs.next()) {
-				    String em = rs.getString("IDENTITIES_UID");
+				    String em = rs.getString(IDENTITIES_UID);
 				   
 				    if(em.equals(identity.getUid()))
 				    {
@@ -205,12 +214,12 @@ public class JDBCIdentityisConnect {
 				    }
 				}
 				
-				
+				prepareStatement.close();
 				if(count==1)
 				{
 					logger.trace("uid found ");
 
-					PreparedStatement prepareStatement1 = connection.prepareStatement("delete from IDENTITIES where IDENTITIES_UID=?");
+					PreparedStatement prepareStatement1 = connection.prepareStatement(QUERY_DELETE_UID);
 					logger.trace(identity.getUid());
 					prepareStatement1.setString(1, identity.getUid());
 					prepareStatement1.execute();

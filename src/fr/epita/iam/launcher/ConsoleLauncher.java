@@ -26,12 +26,12 @@ import fr.epita.iam.problem.*;
  */
 public class ConsoleLauncher {
 	private static final Logger logger =  LogManager.getLogger(ConsoleLauncher.class);
+	
+	
+	private static JDBCIdentityisConnect isConnect;
 	private ConsoleLauncher(){
 		//Adding a private constructor to hide the implicit public one.
 	}
-	
-	private static JDBCIdentityisConnect isConnect;
-
 	/**
 	 * @param args
 	 * @throws IOException 

@@ -3,7 +3,7 @@ package fr.epita.iam.authentication;
 public class AuthenticateUser {
 	public boolean authenticate(String username, String password) {
 		// authentication method
-		if (username .equals("adm") && password .equals("pwd"))
+		if ("adm".equals(username) && "pwd".equals(password))
 		return true;
 		else 
 			return false;

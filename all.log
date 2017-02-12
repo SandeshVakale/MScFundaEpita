@@ -32,3 +32,123 @@ This is the list of all identities in the system
 0.Identity [uid=10, displayName=sandesh vakale, email=sandesh]
 Do you want to run again Yes/No
 thank you for banking with us
+Hello, welcome to the IAM application
+This is online database
+program started
+Please enter your login
+Please enter your password
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+You've selected : Identity Creation
+Please enter the Identity display name
+Please enter the Identity email
+you succesfully created this identity :sandesh vakale
+
+Do you want to run again Yes/No
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+This is the list of all identities in the system
+0.Identity [uid=10, displayName=sandesh vakale, email=sandesh]
+1.Identity [uid=12, displayName=sandesh, email=vakale]
+Do you want to run again Yes/No
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+Modification Activity
+Please enter the Identity uid
+Please enter the new Identity display name
+Please enter the new Identity email address
+uid found 
+Identity updated
+New Identity display name = aruna
+New Identity email address = vakale
+
+Do you want to run again Yes/No
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+This is the list of all identities in the system
+0.Identity [uid=10, displayName=sandesh vakale, email=sandesh]
+1.Identity [uid=12, displayName=aruna, email=vakale]
+Do you want to run again Yes/No
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+Deletion Activity
+Please enter the Identity uid
+Unable to delete!
+Do you want to run again Yes/No
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+This is the list of all identities in the system
+0.Identity [uid=10, displayName=sandesh vakale, email=sandesh]
+1.Identity [uid=12, displayName=aruna, email=vakale]
+Do you want to run again Yes/No
+invalid input. Please write Yes or No
+Do you want to run again Yes/No
+thank you for banking with us
+Hello, welcome to the IAM application
+This is online database
+program started
+Please enter your login
+Please enter your password
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+Deletion Activity
+Please enter the Identity uid
+uid found 
+12
+Identity deleted
+
+Do you want to run again Yes/No
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+This is the list of all identities in the system
+0.Identity [uid=10, displayName=sandesh vakale, email=sandesh]
+Do you want to run again Yes/No
+thank you for banking with us
