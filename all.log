@@ -1,0 +1,34 @@
+Hello, welcome to the IAM application
+This is online database
+program started
+Please enter your login
+Please enter your password
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+This is the list of all identities in the system
+0.Identity [uid=10, displayName=sandesh vakale, email=sandesh]
+Do you want to run again Yes/No
+thank you for banking with us
+Hello, welcome to the IAM application
+This is online database
+program started
+Please enter your login
+Please enter your password
+You're authenticated
+Here are the actions you can perform :
+a. Create an Identity
+b. Modify an Identity
+c. Delete an Identity
+d. List Identities
+e. quit
+your choice (a|b|c|d|e) ? : 
+This is the list of all identities in the system
+0.Identity [uid=10, displayName=sandesh vakale, email=sandesh]
+Do you want to run again Yes/No
+thank you for banking with us
