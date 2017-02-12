@@ -11,8 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.apache.logging.log4j.*;
+
 
 import fr.epita.iam.datamodel.Identity;
+import fr.epita.iam.launcher.ConsoleLauncher;
 import fr.epita.iam.problem.*;
 
 
@@ -20,31 +23,36 @@ import fr.epita.iam.problem.*;
  * @author Sandesh Vakale
  *
  */
-public class JDBCIdentityDAO {
+public class JDBCIdentityisConnect {
 
-	
-	
+	//instance of logger to show 
+	private static final Logger logger =  LogManager.getLogger(ConsoleLauncher.class);
 	private Connection connection;
 	
 	/**
 	 * @throws SQLException 
 	 * 
 	 */
-	public JDBCIdentityDAO() throws SQLException {
+	public JDBCIdentityisConnect() throws SQLException {
+		
+		//connect to database
 		
 		try{
 		this.connection = DriverManager.getConnection("jdbc:mysql://66.147.244.85:3306/checkmyg_Epita?"+"user=checkmyg_Sandesh&password=SandeshV");
 		
-		System.out.println("This is online database");
+		logger.trace("This is online database");
 		}catch(SQLException e)
 		{
-			System.out.println("May be you are not connected to internet, Please connect to internet and try again");
+			logger.trace("May be you are not connected to internet, Please connect to internet and try again");
 			System.exit(1);
 		}
 	}
 	
 	
 	public void writeIdentity(Identity identity) throws SQLException {
+		
+		//write in identity table with query
+		
 		String insertStatement = "insert into IDENTITIES (IDENTITIES_DISPLAYNAME, IDENTITIES_EMAIL, IDENTITIES_BIRTHDATE) "
 				+ "values(?, ?, ?)";
 		PreparedStatement pstmtinsert = connection.prepareStatement(insertStatement);
@@ -55,12 +63,14 @@ public class JDBCIdentityDAO {
 
 		pstmtinsert.execute();
 		
-		System.out.println("you succesfully created this identity :" +identity.getDisplayName()+" "+identity.getEmail()+"\n");
+		logger.trace("you succesfully created this identity :" +identity.getDisplayName()+" "+identity.getEmail()+"\n");
 		pstmtinsert.close();
 
 	}
 
 	public List<Identity> readAll() throws SQLException {
+		
+		//list of identities
 		List<Identity> identities = new ArrayList<Identity>();
 
 		PreparedStatement pstmtselect = connection.prepareStatement("select * from IDENTITIES");
@@ -79,31 +89,32 @@ public class JDBCIdentityDAO {
 	}
 
 	public void verify(Identity identity) throws SQLException{
-			
+		// to check that entered UID is available or not in database table	
+		
 	int count = 0;
 		
 		PreparedStatement pstmtselect = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
 		ResultSet rs = pstmtselect.executeQuery();
-		System.out.println(rs);
+		logger.trace(rs);
 		while (rs.next()) {
 		    String em = rs.getString("IDENTITIES_UID");
-		    System.out.println("em="+em);
+		    logger.trace("em="+em);
 		    if(em.equals(identity.getUid()))
 		    {
 		    	count++;
-		    	System.out.println("count="+count);
+		    	logger.trace("count="+count);
 		    }
 		}
 		
-		System.out.println("count="+count);
+		logger.trace("count="+count);
 		if(count==1)
 		{
-			System.out.println("uid found ");
+			logger.trace("uid found ");
 			
 			
 		}else{
 			
-			System.out.println("uid not found, Please check list of available uids and try again");
+			logger.trace("uid not found, Please check list of available uids and try again");
 		}
 		pstmtselect.close();
 		
@@ -114,20 +125,12 @@ public class JDBCIdentityDAO {
 		
 	
 	public void update(Identity identity) throws UpdateException{
-		 {
-		
-			 
-			
-			 
-			 
+		 { 
+			 // to update identity
 			 
 		try {
 			
-			
-			
-			////////////////////
-			
-			
+						
 			int count = 0;
 			
 			PreparedStatement pstmtselect = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
@@ -146,34 +149,25 @@ public class JDBCIdentityDAO {
 			pstmtselect.close();
 			if(count==1)
 			{
-				System.out.println("uid found ");
+				logger.trace("uid found ");
 
 				PreparedStatement prepareStatement = connection.prepareStatement("update IDENTITIES set IDENTITIES_EMAIL=?,IDENTITIES_DISPLAYNAME=? where IDENTITIES_UID=?");
 				prepareStatement.setString(1, identity.getEmail() );
 				prepareStatement.setString(2, identity.getDisplayName() );
 				prepareStatement.setString(3, identity.getUid());
 				prepareStatement.execute();
-				
-				System.out.println("Identity updated");
-				System.out.println("New Identity display name = "+identity.getDisplayName());
-				System.out.println("New Identity email address = "+identity.getEmail()+"\n");
 				prepareStatement.close();
+				logger.trace("Identity updated");
+				logger.trace("New Identity display name = "+identity.getDisplayName());
+				logger.trace("New Identity email address = "+identity.getEmail()+"\n");
+				
 			}else{
 				
-				System.out.println("uid not found, Please check list of available uids and try again");
+				logger.trace("uid not found, Please check list of available uids and try again");
 				
 			}
 			
-			
-			///////////////////////
-			
-			
-			
-			
-			
-			
-			
-			
+		
 			
 		} catch (SQLException e) {
 			UpdateException due = new UpdateException("Program cannot update the file");
@@ -191,15 +185,16 @@ public class JDBCIdentityDAO {
 		try {
 			
 			
-			////////////////////
+			//to delete identity
 			
 			
 			 int count = 0;
 				
-				PreparedStatement pstmt_select = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
-				ResultSet rs = pstmt_select.executeQuery();
-				//System.out.println(rs);
-				String arr = null;
+				PreparedStatement prepareStatement = connection.prepareStatement("(select IDENTITIES_UID from IDENTITIES)");
+				ResultSet rs = prepareStatement.executeQuery();
+				prepareStatement.close();
+				
+				
 				while (rs.next()) {
 				    String em = rs.getString("IDENTITIES_UID");
 				   
@@ -213,31 +208,22 @@ public class JDBCIdentityDAO {
 				
 				if(count==1)
 				{
-					System.out.println("uid found ");
+					logger.trace("uid found ");
 
-					PreparedStatement prepareStatement = connection.prepareStatement("delete from IDENTITIES where IDENTITIES_UID=?");
-					System.out.println(identity.getUid());
-					prepareStatement.setString(1, identity.getUid());
-					prepareStatement.execute();
-					System.out.println("Identity deleted\n");
+					PreparedStatement prepareStatement1 = connection.prepareStatement("delete from IDENTITIES where IDENTITIES_UID=?");
+					logger.trace(identity.getUid());
+					prepareStatement1.setString(1, identity.getUid());
+					prepareStatement1.execute();
+					prepareStatement1.close();
+					logger.trace("Identity deleted\n");
 					
 				}else{
 					
-					System.out.println("uid not found, Please check list of available uids and try again");
+					logger.trace("uid not found, Please check list of available uids and try again");
 					
 				}
 			
-			///////////////////////
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+		
 			
 			
 		} catch (SQLException e) {

@@ -5,7 +5,7 @@ public class UpdateException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String updateFault;
+	private final String updateFault;
 	
 	/**
 	 * @param message

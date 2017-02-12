@@ -7,46 +7,64 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
-import fr.epita.iam.datamodel.Identity;
-import fr.epita.iam.services.JDBCIdentityDAO;
 
+import org.apache.logging.log4j.*;
+
+import fr.epita.iam.authentication.*;
+import fr.epita.iam.datamodel.Identity;
+import fr.epita.iam.services.JDBCIdentityisConnect;
+import fr.tjo.iamcoretj.service.authentication.AuthenticationService;
 import fr.epita.iam.problem.*;
+
+
+
+
 
 /**
  * @author Sandesh Vakale
  *
  */
 public class ConsoleLauncher {
-	
+	private static final Logger logger =  LogManager.getLogger(ConsoleLauncher.class);
 	private ConsoleLauncher(){
 		//Adding a private constructor to hide the implicit public one.
 	}
 	
-	private static JDBCIdentityDAO dao;
+	private static JDBCIdentityisConnect isConnect;
 
 	/**
 	 * @param args
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
+	
+	
+	
+	
 	public static void main(String[] args) throws IOException, SQLException {
-		System.out.println("Hello, welcome to the IAM application");
+		logger.trace("Hello, welcome to the IAM application");
 		Scanner scanner = new Scanner(System.in);
-		dao = new JDBCIdentityDAO();
+		isConnect = new JDBCIdentityisConnect();
 		
 		
-		
+	
 		//authentication
-		System.out.println("Please enter your login");
+		logger.trace("program started");
+		
+		logger.trace("Please enter your login");
 		String login = scanner.nextLine();
-		System.out.println("Please enter your password");
+		logger.trace("Please enter your password");
 		String password = scanner.nextLine();
 		
-		if(!authenticate(login, password)){
+		//check authentication
+		AuthenticateUser authService = new AuthenticateUser();
+		if(!authService.authenticate(login, password)){
 			scanner.close();
 			return;
 		}
 		int dountill = 1;
+		
+		// check if user want to run code again "dountill"
 		while(dountill==1)
 		{
 		// menu
@@ -76,13 +94,13 @@ public class ConsoleLauncher {
 			break;
 			
 		case "e":
-			System.out.println("thank you for banking with us");
+			logger.trace("thank you for banking with us");
 			dountill=0;
 			break;
 			
 		default:
 			
-			System.out.println("This option is not recognized ("+ answer + ") Please try again");
+			logger.trace("This option is not recognized ("+ answer + ") Please try again");
 			break;
 		}
 		}
@@ -95,11 +113,12 @@ public class ConsoleLauncher {
 	 * 
 	 */
 	private static void listIdentities() throws SQLException {
-		System.out.println("This is the list of all identities in the system");
-		List<Identity> list = dao.readAll();
+		//list identities
+		logger.trace("This is the list of all identities in the system");
+		List<Identity> list = isConnect.readAll();
 		int size = list.size();
 		for(int i = 0; i < size; i++){
-			System.out.println( i+ "." + list.get(i));
+			logger.trace( i+ "." + list.get(i));
 		}
 	
 		
@@ -108,7 +127,9 @@ public class ConsoleLauncher {
 
 	
 	private static int runAgain(Scanner scanner){
-		System.out.println("Do you want to run again Yes/No");
+		
+		//run again if user want to run code again
+		logger.trace("Do you want to run again Yes/No");
 		int t;
 		String check = scanner.nextLine();
 		
@@ -119,11 +140,11 @@ public class ConsoleLauncher {
 		}else if("No".equals(check) || "no".equals(check) || "N".equals(check) || "n".equals(check))
 		{
 			t=0;
-			System.out.println("thank you for banking with us");
+			logger.trace("thank you for banking with us");
 			
 		}else
 		{   t=0;
-			System.out.println("invalid input. Please write Yes or No");
+			logger.trace("invalid input. Please write Yes or No");
 			runAgain(scanner);
 		}
 		return t;
@@ -135,13 +156,15 @@ public class ConsoleLauncher {
 	 * @throws SQLException 
 	 */
 	private static void createIdentity(Scanner scanner) throws SQLException {
-		System.out.println("You've selected : Identity Creation");
-				System.out.println("Please enter the Identity display name");
+		
+		// create identity
+		logger.trace("You've selected : Identity Creation");
+		logger.trace("Please enter the Identity display name");
 		String displayName = scanner.nextLine();
-		System.out.println("Please enter the Identity email");
+		logger.trace("Please enter the Identity email");
 		String email = scanner.nextLine();
 		Identity newIdentity = new Identity(null, displayName, email);
-		dao.writeIdentity(newIdentity);
+		isConnect.writeIdentity(newIdentity);
 		
 	
 		
@@ -150,58 +173,54 @@ public class ConsoleLauncher {
 	
 	
 	private static void deleteIdentity(Scanner scanner){
-		
-		System.out.println("Deletion Activity");
-		System.out.print("Please enter the Identity uid");
+		//delete identity
+		logger.trace("Deletion Activity");
+		logger.trace("Please enter the Identity uid");
 		String uid = scanner.nextLine();
 		
 		
 		Identity identity = new Identity(uid, null, null);
 		try {
-			dao.delete(identity);
+			isConnect.delete(identity);
 			
 		} catch (DeleteException e) {
-			System.out.println(e.getDeleteFault());
+			logger.trace(e.getDeleteFault());
 		}
 		
 		
 	}
 	private static void udateIdentity(Scanner scanner) throws SQLException{
-		
-		System.out.println("Modification Activity");
-		System.out.print("Please enter the Identity uid");
+		//update identity
+		logger.trace("Modification Activity");
+		logger.trace("Please enter the Identity uid");
 		String uid = scanner.nextLine();
-		System.out.print("Please enter the new Identity display name");
+		logger.trace("Please enter the new Identity display name");
 		String displayName = scanner.nextLine();
-		System.out.print("Please enter the new Identity email address");
+		logger.trace("Please enter the new Identity email address");
 		String email = scanner.nextLine();
 		
 		Identity iDentity = new Identity(uid, displayName, email);
-		
-		
-
-		
+						
 		try {
-			dao.update(iDentity);
+			isConnect.update(iDentity);
 		} catch (UpdateException e) {
-			System.out.println(e.getUpdateFault());
+			logger.trace(e.getUpdateFault());
 
 		}
-
-	
-		
+			
 	}
 
 	
 	private static void startmenu()
 	{
-		System.out.println("Here are the actions you can perform :");
-		System.out.println("a. Create an Identity");
-		System.out.println("b. Modify an Identity");
-		System.out.println("c. Delete an Identity");
-		System.out.println("d. List Identities");
-		System.out.println("e. quit");
-		System.out.println("your choice (a|b|c|d|e) ? : ");
+		// show main menu
+		logger.trace("Here are the actions you can perform :");
+		logger.trace("a. Create an Identity");
+		logger.trace("b. Modify an Identity");
+		logger.trace("c. Delete an Identity");
+		logger.trace("d. List Identities");
+		logger.trace("e. quit");
+		logger.trace("your choice (a|b|c|d|e) ? : ");
 		
 	}
 	/**
@@ -209,7 +228,8 @@ public class ConsoleLauncher {
 	 * @return
 	 */
 	private static String menu(Scanner scanner) {
-		System.out.println("You're authenticated");
+		logger.trace("You're authenticated");
+		// calling of main menu
 		startmenu();
 		return scanner.nextLine();
 		
@@ -219,10 +239,6 @@ public class ConsoleLauncher {
 	 * @param login
 	 * @param password
 	 */
-	private static boolean authenticate(String login, String password) {
 
-		//authentication method
-		return "adm".equals(login) && "pwd".equals(password);
-	}
 
 }
